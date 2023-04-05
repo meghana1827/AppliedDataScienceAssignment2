@@ -6,14 +6,13 @@ import pandas as pd    # for reading data and analysis
 import matplotlib.pyplot as mpbt    # data visualization
 import seaborn as sns    # data visualization
 
-
 # # Function to Read Data and Return Dataframes
 
 def readWBData(nmfl):    # function for data reading
 
-"""
+'''
 The function readWBData reads World Bank data from a given file, cleans it, and returns two dataframes - one for the actual data and the other for the time series. The function filters the data by selecting the indicators of "Urban population" and "CO2 emissions (kt)" and the countries India, China, Brazil, Ireland, Iraq, and World. The missing values in the data are cleaned using the mean value. The function then combines the Country Name and Indicator Name columns and inserts it into a new column named "Country with Indicator". The data is then transposed, and the first row is set as column names. The years are added to the data, and the year column is set as the index for the time series. The function takes one argument, nmfl, which is the name of the World Bank data file. The function returns two dataframes - the first dataframe contains the actual data with selected indicators and countries, and the second dataframe is the time series of the selected indicators for the selected countries.
-"""
+'''
     wbd=open(nmfl,"r+").read()     # open data in read mode  
     wbd=wbd[85:]     # skip 85 location to get data
     wbdt=open("wbt.csv","w+").write(wbd)    # write the data in drive with CSV extension
@@ -41,26 +40,19 @@ The function readWBData reads World Bank data from a given file, cleans it, and 
     return wbdt.reset_index(drop=True).drop(['Unnamed: 65','Country Code','Indicator Code'],axis=1),wbdt1   # return data
 print(readWBData.__doc__)
 
-
 wbd,wbd1=readWBData("CO2_Emission_Population_World_Bank.csv")   # call function to read data
-
 
 wbd.head()   # First Data with Year Column
 
-
 wbd1.head()   # second data with country column
-
 
 # Data Statistics
 
 wbd.describe().T   # data description (transposed to get complete view)
 
-
 wbd1.describe().T      # data description (transposed to get omplete view)
 
-
 wbd.info()   # data information
-
 
 wbd1.info()       # data information
 
@@ -88,7 +80,6 @@ mpbt.xlabel("Skewness",fontsize=18,color="m")      # xlabel assignment
 mpbt.grid()     # gridding the plot
 mpbt.show() 
 
-
 # Data Analysis
 
 vr_1,vr_2=[],[]    # take list to store Urban population and CO2 emissions for taken countries
@@ -109,12 +100,11 @@ ccf=np.corrcoef(statwbd['Urban Population'],statwbd['CO2 emissions'])[0,1]    # 
 print("Correlation between Population and CO2 Emition: {}".format(round(ccf,3)))
 statwbd
 
-
 def colsep(dt):    # function to preapre data for urban population and co2 emission
 
-"""
+'''
 This function separates the columns of a given dataset into two separate datasets, one for urban population and the other for CO2 emissions. The input parameter 'dt' represents the dataset to be separated. The function first converts the column names of the dataset to a list and then iterates through each column. If the column name contains the string "Urban", it is added to the 'urb' list. Otherwise, it is added to the 'co2' list. The function then prints the list of urban columns and creates two new datasets 'dt1' and 'dt2', which contain only the urban and CO2 columns respectively (except for the "World" column). Finally, the function returns the two new datasets 'dt1' and 'dt2'.
-"""
+'''
     cls=dt.columns.tolist()   # taking columns into list
     urb,co2=[],[]
     for c in cls:
@@ -129,11 +119,10 @@ This function separates the columns of a given dataset into two separate dataset
 
 print(colsep.__doc__)
 
-
 def timeseries(dt,ind):
-"""
+'''
 This function creates a time series plot from a given dataset 'dt'. The input parameter 'ind' represents the feature to be plotted against the years. The function first creates a line plot using the 'plot' function of the pandas library and specifies the plot type as 'line'. The plot is then displayed with the specified figure size. The title, xlabel, and ylabel of the plot are assigned using the 'title', 'xlabel', and 'ylabel' functions of the matplotlib library respectively. Finally, the plot is gridded using the 'grid' function and displayed using the 'show' function of the matplotlib library.
-"""
+'''
     dt.plot(kind='line',figsize=(9,5))    # plotting by features (nm) from dataframe by years
     mpbt.title("{} for Countries by Year".format(ind),fontsize=22,color="b")    # title
     mpbt.ylabel("{}".format(ind),fontsize=18,color="b")    # ylabel assignment
@@ -142,16 +131,14 @@ This function creates a time series plot from a given dataset 'dt'. The input pa
     mpbt.show()    # show plot
 print(timeseries.__doc__)
 
-
 wbd11,wbd12=colsep(wbd1)
 timeseries(wbd11,"Urban population")
 timeseries(wbd12,"CO2 emissions")
 
-
 def barchart(dt,cl,fet,ci):
-"""
+'''
 This function creates a bar chart from a given dataset 'dt' using a specific column 'ci'. The input parameter 'cl' represents the color of the bars in the plot, 'fet' represents the feature to be plotted against the countries, and 'ci' represents the index of the column to be plotted. If the 'Country' column is present in the dataset, it is set as the index of the dataset using the 'set_index' function of the pandas library. The function then selects the specified column using the 'iloc' function and creates a bar plot using the 'plot' function of the pandas library with the plot type as 'bar'. The plot is then displayed with the specified figure size. The title, xlabel, and ylabel of the plot are assigned using the 'title', 'xlabel', and 'ylabel' functions of the matplotlib library respectively. Finally, the plot is gridded using the 'grid' function and displayed using the 'show' function of the matplotlib library.
-"""
+'''
     try:
         dt=dt.set_index("Country")
     except:
@@ -166,7 +153,6 @@ print(barchart.__doc__)
 
 barchart(statwbd,"#00FFFF","Urban Population",0)
 barchart(statwbd,"#FDBD01","CO2 Emissions",1)
-
 
 wbd1cols=wbd1.columns   # take column names
 wbd1idx=wbd1.index   # take data index
